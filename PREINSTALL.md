@@ -1,22 +1,47 @@
-<!-- 
-This file provides your users an overview of your extension. All content is optional, but this is the recommended format. Your users will see the contents of this file when they run the `firebase ext:info` command.
+# Firestore Importer
 
-Include any important functional details as well as a brief description for any additional setup required by the user (both pre- and post-installation).
+**Automatically import JSON and CSV files from Cloud Storage into Firestore collections.**
 
-Learn more about writing a PREINSTALL.md file in the docs:
-https://firebase.google.com/docs/extensions/publishers/user-documentation#writing-preinstall
--->
+This extension allows you to easily import data from JSON and CSV files into Firestore. Simply upload your files to a designated folder in your Cloud Storage bucket, and the extension will automatically process them and import the data into your specified Firestore collection.
 
-Use this extension to send a friendly greeting.
+## How it works
 
-When triggered by an HTTP request, this extension responds with your specified friendly greeting.
+1. You upload JSON or CSV files to a specified folder in your default Cloud Storage bucket.
+2. The extension detects the new file and processes it based on its format:
+   - **JSON files**: The extension parses the JSON and imports it into Firestore.
+   - **CSV files**: The extension converts the CSV to JSON (using the first row as field names) and imports it into Firestore.
+3. The data is written to your specified Firestore collection using efficient batch operations.
 
-<!-- We recommend keeping the following section to explain how billing for Firebase Extensions works -->
-# Billing
+## Use cases
 
-This extension uses other Firebase or Google Cloud Platform services which may have associated charges:
+- Migrate data from legacy systems to Firestore
+- Bulk import user data
+- Import product catalogs
+- Load test data for development and testing
+- Periodically update Firestore collections from external data sources
 
-<!-- List all products the extension interacts with -->
+## Additional setup
+
+Before installing this extension, make sure you have:
+
+1. [Set up a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart) in your Firebase project.
+2. [Set up Cloud Storage](https://firebase.google.com/docs/storage) in your Firebase project.
+
+## Billing
+
+This extension uses the following Firebase services which may have associated charges:
+
+- Cloud Firestore
+- Cloud Storage
 - Cloud Functions
 
-When you use Firebase Extensions, you're only charged for the underlying resources that you use. A paid-tier billing plan is only required if the extension uses a service that requires a paid-tier plan, for example calling to a Google Cloud Platform API or making outbound network requests to non-Google services. All Firebase services offer a free tier of usage. [Learn more about Firebase billing.](https://firebase.google.com/pricing)
+This extension also uses the following Firebase resources:
+
+- Cloud Storage Triggers
+
+## Best practices
+
+- For large datasets, consider splitting your data into multiple smaller files to improve processing efficiency.
+- Make sure your JSON or CSV files are well-formed and contain valid data.
+- For CSV files, ensure the first row contains the field names you want to use in Firestore.
+- For JSON files, structure your data in a way that matches how you want it stored in Firestore.
