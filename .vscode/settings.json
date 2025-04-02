@@ -1,0 +1,10 @@
+{
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "typescript.format.indentSize": 4,
+  "javascript.format.indentSize": 4,
+  "[typescript]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false
+  }
+}
