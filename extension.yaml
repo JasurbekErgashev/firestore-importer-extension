@@ -1,61 +1,109 @@
-# Learn detailed information about the fields of an extension.yaml file in the docs:
-# https://firebase.google.com/docs/extensions/reference/extension-yaml
+name: firestore-importer
+version: 0.0.1
+specVersion: v1beta
 
-# Identifier for your extension
-# TODO: Replace this with an descriptive name for your extension.
-name: greet-the-world  
-version: 0.0.1  # Follow semver versioning
-specVersion: v1beta  # Version of the Firebase Extensions specification
-
-# Friendly display name for your extension (~3-5 words)
-displayName: Greet the world
-
-# Brief description of the task your extension performs (~1 sentence)
+displayName: Firestore Importer
 description: >-
-  Sends the world a greeting.
+  Automatically imports JSON and CSV files from Cloud Storage into Firestore collections.
 
-license: Apache-2.0  # https://spdx.org/licenses/
+license: MIT License
 
-# Public URL for the source code of your extension.
-# TODO:  Replace this with your GitHub repo.
-sourceUrl: https://github.com/ORG_OR_USER/REPO_NAME
+sourceUrl: https://github.com/JasurbekErgashev/firestore-importer-extension
 
-# Specify whether a paid-tier billing plan is required to use your extension.
-# Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
 billingRequired: true
 
-# In an `apis` field, list any Google APIs (like Cloud Translation, BigQuery, etc.)
-# required for your extension to operate.
-# Learn more in the docs:
-# https://firebase.google.com/docs/extensions/reference/extension-yaml#apis-field
+apis:
+  - apiName: storage-component.googleapis.com
+    reason: Allows the extension to read files from Cloud Storage.
+  - apiName: firestore.googleapis.com
+    reason: Allows the extension to write data to Firestore.
 
-# In a `roles` field, list any IAM access roles required for your extension to operate.
-# Learn more in the docs:
-# https://firebase.google.com/docs/extensions/reference/extension-yaml#roles-field
+roles:
+  - role: datastore.user
+    reason: Allows the extension to write to Firestore.
+  - role: storage.objectViewer
+    reason: Allows the extension to read files from Cloud Storage.
 
-# In the `resources` field, list each of your extension's functions, including the trigger for each function.
-# Learn more in the docs:
-# https://firebase.google.com/docs/extensions/reference/extension-yaml#resources-field
 resources:
-  - name: greetTheWorld
+  - name: importToFirestore
     type: firebaseextensions.v1beta.function
     description: >-
-      HTTP request-triggered function that responds with a specified greeting message
+      Processes files uploaded to a specified Cloud Storage folder and imports them into a Firestore collection.
     properties:
-      # httpsTrigger is used for an HTTP triggered function.
-      httpsTrigger: {}
-      runtime: "nodejs16"
+      location: ${param:LOCATION}
+      runtime: nodejs16
+      eventTrigger:
+        eventType: google.storage.object.finalize
+        resource: projects/_/buckets/${param:PROJECT_ID}.firebasestorage.app
 
-# In the `params` field, set up your extension's user-configured parameters.
-# Learn more in the docs:
-# https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
 params:
-  - param: GREETING
-    label: Greeting for the world
+  - param: LOCATION
+    label: Cloud Functions location
     description: >-
-      What do you want to say to the world?
-      For example, Hello world? or What's up, world?
+      Where do you want to deploy the functions created for this extension?
+      You usually want a location close to your Storage bucket and Firestore database.
+      For help selecting a location, refer to the [location selection guide](https://firebase.google.com/docs/functions/locations).
+    type: select
+    options:
+      - label: Iowa (us-central1)
+        value: us-central1
+      - label: South Carolina (us-east1)
+        value: us-east1
+      - label: Northern Virginia (us-east4)
+        value: us-east4
+      - label: Los Angeles (us-west2)
+        value: us-west2
+      - label: Salt Lake City (us-west3)
+        value: us-west3
+      - label: Las Vegas (us-west4)
+        value: us-west4
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Belgium (europe-west1)
+        value: europe-west1
+      - label: London (europe-west2)
+        value: europe-west2
+      - label: Frankfurt (europe-west3)
+        value: europe-west3
+      - label: Zurich (europe-west6)
+        value: europe-west6
+      - label: Hong Kong (asia-east2)
+        value: asia-east2
+      - label: Tokyo (asia-northeast1)
+        value: asia-northeast1
+      - label: Osaka (asia-northeast2)
+        value: asia-northeast2
+      - label: Seoul (asia-northeast3)
+        value: asia-northeast3
+      - label: Mumbai (asia-south1)
+        value: asia-south1
+      - label: Jakarta (asia-southeast2)
+        value: asia-southeast2
+      - label: Montreal (northamerica-northeast1)
+        value: northamerica-northeast1
+      - label: Sao Paulo (southamerica-east1)
+        value: southamerica-east1
+      - label: Sydney (australia-southeast1)
+        value: australia-southeast1
+    default: us-central1
+    required: true
+    immutable: false
+
+  - param: IMPORT_FOLDER
+    label: Import Folder Path
+    description: >-
+      The path to the folder in your default Cloud Storage bucket where files will be uploaded for import.
+      Do not include a leading or trailing slash. Example: 'imports'
     type: string
-    default: Hello
+    default: imports
+    required: true
+    immutable: false
+
+  - param: TARGET_COLLECTION
+    label: Target Firestore Collection
+    description: >-
+      The name of the Firestore collection where the imported data will be stored.
+      Example: 'users'
+    type: string
     required: true
     immutable: false
