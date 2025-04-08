@@ -1,12 +1,14 @@
 name: firestore-importer
-version: 0.0.1
-specVersion: v1beta
+version: 0.0.2
+specVersion: v2beta
 
 displayName: Firestore Importer
 description: >-
   Automatically imports JSON and CSV files from Cloud Storage into Firestore collections.
 
 license: apache-2.0
+
+icon: assets/icon.png
 
 sourceUrl: https://github.com/JasurbekErgashev/firestore-importer-extension
 
@@ -26,7 +28,7 @@ roles:
 
 resources:
   - name: importToFirestore
-    type: firebaseextensions.v1beta.function
+    type: firebaseextensions.v2beta.function
     description: >-
       Processes files uploaded to a specified Cloud Storage folder and imports them into a Firestore collection.
     properties:
