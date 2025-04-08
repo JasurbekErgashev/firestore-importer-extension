@@ -2,6 +2,6 @@
 
 - Initial Version
 
-# Version 0.0.2
+## Version 0.0.2
 
 - Added Extension Icon
