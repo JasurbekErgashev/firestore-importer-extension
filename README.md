@@ -1,4 +1,4 @@
-# Firestore Import Extension
+# Firestore Importer Extension
 
 <p align="center">
   <img src="icon.png" alt="Firestore Importer Extension Icon" width="150">
