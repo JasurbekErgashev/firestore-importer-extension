@@ -9,9 +9,15 @@ description: >-
   Automatically imports JSON and CSV files from Cloud Storage into Firestore collections.
 
 icon: icon.png
+tags: [utilities]
 
 sourceUrl: https://github.com/JasurbekErgashev/firestore-importer-extension
 releaseNotesUrl: https://github.com/JasurbekErgashev/firestore-importer-extension/blob/main/CHANGELOG.md
+
+author:
+  authorName: Jasurbek Ergashev
+  email: jasurbek.fm@gmail.com
+  url: https://www.linkedin.com/in/jasurbek-ergashev/
 
 apis:
   - apiName: storage-component.googleapis.com
