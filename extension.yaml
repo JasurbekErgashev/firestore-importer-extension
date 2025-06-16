@@ -41,7 +41,7 @@ resources:
       runtime: nodejs20
       eventTrigger:
         eventType: google.storage.object.finalize
-        resource: projects/_/buckets/${param:PROJECT_ID}.firebasestorage.app
+        resource: projects/_/buckets/${STORAGE_BUCKET}
 
 params:
   - param: LOCATION
