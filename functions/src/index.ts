@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions/v1';
 import * as admin from 'firebase-admin';
 import * as path from 'path';
 import * as csv from 'csv-parser';
@@ -20,8 +20,9 @@ const TARGET_COLLECTION = process.env.TARGET_COLLECTION || '';
  * Cloud Function triggered when a file is uploaded to Cloud Storage
  */
 export const importToFirestore = functions.storage
-    .onObjectFinalized(async (event) => {
-      const filePath = event.data.name;
+    .object()
+    .onFinalize(async (object) => {
+      const filePath = object.name;
 
       // Log the file that triggered the function
       functions.logger.info('Processing file:', filePath);
@@ -36,7 +37,7 @@ export const importToFirestore = functions.storage
       }
 
       // Skip if the file was deleted
-      if (!event.data.size) {
+      if (!object.size) {
         functions.logger.info(`File ${filePath} was deleted. Skipping.`);
         return null;
       }
@@ -46,7 +47,7 @@ export const importToFirestore = functions.storage
 
       try {
       // Get file from Cloud Storage
-        const bucket = admin.storage().bucket(event.data.bucket);
+        const bucket = admin.storage().bucket(object.bucket);
         const file = bucket.file(filePath);
 
         // Process the file based on its extension
